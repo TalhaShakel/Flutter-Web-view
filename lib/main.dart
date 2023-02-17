@@ -1,7 +1,33 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_webview/Helper.dart';
 import 'package:flutter_webview/webview.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
+  // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  try {
+    DocumentSnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("password")
+        .doc("passwordid")
+        .get();
+    Map data = querySnapshot.data() as Map;
+    password = data["password"];
+    url = data["url"];
+    print(password);
+  } on FirebaseException catch (e) {
+    print(e);
+  } catch (e) {
+    print(e);
+  }
+
   runApp(const MyApp());
 }
 
@@ -12,6 +38,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -26,7 +53,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const WebViewApp(),
+      home: WebViewApp(),
     );
   }
 }
