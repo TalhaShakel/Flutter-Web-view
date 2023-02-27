@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_webview/webview.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import 'Helper.dart';
 
@@ -11,6 +13,8 @@ class Editurl extends StatelessWidget {
   var pincontoller = TextEditingController(text: password);
 
   var weburl = TextEditingController(text: url);
+
+  var pin = TextEditingController();
 
   Editurl({super.key});
 
@@ -46,11 +50,12 @@ class Editurl extends StatelessWidget {
 
         print('SAIR');
       } else if (choice == "VOLTAR") {
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
               builder: (context) => WebViewApp(),
-            ));
+            ),
+            (route) => false);
         print('VOLTAR');
       }
     }
@@ -117,30 +122,44 @@ class Editurl extends StatelessWidget {
                     color: Color.fromRGBO(87, 118, 189, 1)),
               ),
               TextFormField(
+                controller: pin,
                 decoration: InputDecoration(hintText: "****"),
               ),
               Center(
                   child: ElevatedButton(
                       onPressed: () async {
                         EasyLoading.show(status: "Completing...");
-                        try {
-                          await FirebaseFirestore.instance
-                              .collection("password")
-                              .doc("passwordid")
-                              .update({
-                            "password": pincontoller.text.trim(),
-                            "url": weburl.text.trim()
-                          });
-                          // EasyLoading.dismiss();
+                        if (pin.text.toString() != "") {
+                          // if (condition) {
+                          try {
+                            await FirebaseFirestore.instance
+                                .collection("password")
+                                .doc("passwordid")
+                                .update({
+                              "password": pincontoller.text.trim(),
+                              "url": weburl.text.trim()
+                            });
+                            // EasyLoading.dismiss();
+                            EasyLoading.dismiss();
+
+                            // EasyLoading.show(status: "Completed");
+
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WebViewApp(),
+                                ),
+                                (route) => false);
+                          } catch (e) {
+                            EasyLoading.dismiss();
+
+                            print(e);
+                          }
+                        } else {
                           EasyLoading.dismiss();
 
-                          // EasyLoading.show(status: "Completed");
-
-                          Navigator.pop(context);
-                        } catch (e) {
-                          EasyLoading.dismiss();
-
-                          print(e);
+                          Get.snackbar("Enter pin", "");
+                          // Navigator.pop(context);
                         }
                       },
                       child: Text("ok")))
