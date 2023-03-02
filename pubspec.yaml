@@ -41,6 +41,7 @@ dependencies:
   firebase_core: ^2.5.0
   flutter_easyloading: ^3.0.5
   get: ^4.6.5
+  flutter_windowmanager: ^0.2.0
 
 
 dev_dependencies:

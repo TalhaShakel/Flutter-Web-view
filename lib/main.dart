@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_webview/Helper.dart';
 import 'package:flutter_webview/webview.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+
 import 'package:get/get.dart';
 
 import 'firebase_options.dart';
@@ -13,6 +16,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await FlutterWindowManager.addFlags(
+    FlutterWindowManager.FLAG_SECURE |
+        FlutterWindowManager.FLAG_KEEP_SCREEN_ON |
+        FlutterWindowManager.FLAG_FULLSCREEN |
+        FlutterWindowManager.FLAG_SHOW_WALLPAPER |
+        FlutterWindowManager.FLAG_DISMISS_KEYGUARD |
+        FlutterWindowManager.FLAG_TRANSLUCENT_NAVIGATION |
+        FlutterWindowManager.FLAG_LAYOUT_IN_SCREEN |
+        FlutterWindowManager.FLAG_LAYOUT_NO_LIMITS |
+        FlutterWindowManager.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON,
   );
   try {
     DocumentSnapshot querySnapshot = await FirebaseFirestore.instance
@@ -56,5 +70,41 @@ class MyApp extends StatelessWidget {
       ),
       home: WebViewApp(),
     );
+  }
+}
+
+class removemenu extends StatefulWidget {
+  const removemenu({super.key});
+
+  @override
+  State<removemenu> createState() => _removemenuState();
+}
+
+class _removemenuState extends State<removemenu> {
+  void initState() {
+    super.initState();
+
+    // Disable system UI overlays
+    SystemChrome.setEnabledSystemUIOverlays([]);
+
+    // Push full-screen overlay onto the stack
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) {
+            return WillPopScope(
+              onWillPop: () async => false,
+              child: WebViewApp(),
+            );
+          },
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WebViewApp();
   }
 }

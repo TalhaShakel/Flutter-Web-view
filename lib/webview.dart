@@ -64,6 +64,9 @@ class _WebViewAppState extends State<WebViewApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    // SystemChrome.setEnabledSystemUIOverlays([]);
+
     pincontoller.clear();
     changeUrl(urlList[_selectedIndex]);
   }
@@ -180,32 +183,33 @@ class _WebViewAppState extends State<WebViewApp> {
             backgroundColor: Color.fromRGBO(87, 118, 189, 1),
             leading: Image.asset("assets/logo-icon.png"),
             title: Text("calcadames".toUpperCase()),
-            actions: [
-              // IconButton(
-              //     onPressed: () {}, icon: Icon(Icons.more_vert_outlined)),
-              PopupMenuButton<String>(
-                icon: Icon(
-                  Icons.more_vert,
-                  color: Colors.white,
-                ),
-                color: Color.fromRGBO(87, 118, 189, 1),
-                onSelected: choiceAction,
-                itemBuilder: (BuildContext context) {
-                  return [
-                    "SAIR",
-                    "EDITAR URL",
-                  ].map((String choice) {
-                    return PopupMenuItem<String>(
-                      value: choice,
-                      child: Text(
-                        choice,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    );
-                  }).toList();
-                },
-              ),
-            ],
+
+            // actions: [
+            //   // IconButton(
+            //   //     onPressed: () {}, icon: Icon(Icons.more_vert_outlined)),
+            //   PopupMenuButton<String>(
+            //     icon: Icon(
+            //       Icons.more_vert,
+            //       color: Colors.white,
+            //     ),
+            //     color: Color.fromRGBO(87, 118, 189, 1),
+            //     onSelected: choiceAction,
+            //     itemBuilder: (BuildContext context) {
+            //       return [
+            //         "SAIR",
+            //         "EDITAR URL",
+            //       ].map((String choice) {
+            //         return PopupMenuItem<String>(
+            //           value: choice,
+            //           child: Text(
+            //             choice,
+            //             style: TextStyle(color: Colors.white),
+            //           ),
+            //         );
+            //       }).toList();
+            //     },
+            //   ),
+            // ],
           ),
           body: isLoading
               ? const Center(
